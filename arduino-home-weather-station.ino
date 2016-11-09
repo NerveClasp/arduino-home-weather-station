@@ -83,7 +83,7 @@ SFE_BMP180 pressure;
 #define ALTITUDE 1655.0 // Altitude of SparkFun's HQ in Boulder, CO. in meters
 
 void setup(){
-  dht.begin();
+
   Serial.begin(9600);
   Serial.println("REBOOT");
 
@@ -99,6 +99,7 @@ void setup(){
     Serial.println("BMP180 init fail\n\n");
     while(1); // Pause forever.
   }
+ dht.begin();
 }
 
 void loop()
