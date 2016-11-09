@@ -59,60 +59,96 @@ V10 Mike Grusin, SparkFun Electronics 10/24/2013
 V1.1.2 Updates for Arduino 1.6.4 5/2015
 */
 
+#include "DHT.h"
+
+#define DHTPIN 2     // what pin we're connected to
+
+// Uncomment whatever type you're using!
+#define DHTTYPE DHT11   // DHT 11
+// #define DHTTYPE DHT22   // DHT 22  (AM2302)
+//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+
+// Connect pin 1 (on the left) of the sensor to +5V
+// Connect pin 2 of the sensor to whatever your DHTPIN is
+// Connect pin 4 (on the right) of the sensor to GROUND
+// Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
+
+DHT dht(DHTPIN, DHTTYPE);
+
 // Your sketch must #include this library, and the Wire library.
 // (Wire is a standard library included with Arduino.):
 
 #include <SFE_BMP180.h>
 #include <Wire.h>
-
 // You will need to create an SFE_BMP180 object, here called "pressure":
 
 SFE_BMP180 pressure;
 
-#define ALTITUDE 1655.0 // Altitude of SparkFun's HQ in Boulder, CO. in meters
+#define ALTITUDE 236.0 // Altitude of SparkFun's HQ in Boulder, CO. in meters
 
 void setup()
 {
   Serial.begin(9600);
   Serial.println("REBOOT");
-
+  
   // Initialize the sensor (it is important to get calibration values stored on the device).
-
+  pinMode(3, INPUT); //A3 rainchecker analog sensor pin
+  pinMode(4, INPUT); //D4 raincecker digital sensor pin
   if (pressure.begin())
-    Serial.println("BMP180 init success");
+    Serial.println("{status: \"BMP180 init success\"}");
   else
   {
     // Oops, something went wrong, this is usually a connection problem,
     // see the comments at the top of this sketch for the proper connections.
 
-    Serial.println("BMP180 init fail\n\n");
+    Serial.println("{status: \"BMP180 init fail\"}");
     while(1); // Pause forever.
   }
+  dht.begin();
 }
 
 void loop()
 {
   char status;
   double T,P,p0,a;
+  int rain, rainD;
+  rain = analogRead(3);  //outputs ~1024 if there is no water or snow on the sensor, goes down depending on the amount of water/snow
+  rainD = digitalRead(4); //outputs 1 if no rain, 0 if there is water or snow on the sensor
+  Serial.print("{rainD:");
+  Serial.print(rainD);
+  Serial.print(", rainA:");
+  Serial.print(rain);
 
+// Reading temperature or humidity takes about 250 milliseconds!
+// Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  // check if returns are valid, if they are NaN (not a number) then something went wrong!
+  if (isnan(t) || isnan(h)) {
+    Serial.print(", status: \"malfunction\"");
+  } else {
+    Serial.print(", status: \"working\", humidity: ");
+    Serial.print(h);
+    Serial.print(", tempOne: ");
+    Serial.print(t);
+  }
   // Loop here getting pressure readings every 10 seconds.
 
   // If you want sea-level-compensated pressure, as used in weather reports,
   // you will need to know the altitude at which your measurements are taken.
   // We're using a constant called ALTITUDE in this sketch:
-  
-  Serial.println();
-  Serial.print("provided altitude: ");
-  Serial.print(ALTITUDE,0);
-  Serial.println(" meters, ");
+
+  Serial.print(", altProv:");
+  Serial.print(ALTITUDE,0); //in metres
 //  Serial.print(ALTITUDE*3.28084,0);
 //  Serial.println(" feet");
-  
+
   // If you want to measure altitude, and not pressure, you will instead need
   // to provide a known baseline pressure. This is shown at the end of the sketch.
 
   // You must first get a temperature measurement to perform a pressure reading.
-  
+
   // Start a temperature measurement:
   // If request is successful, the number of ms to wait is returned.
   // If request is unsuccessful, 0 is returned.
@@ -131,12 +167,11 @@ void loop()
     if (status != 0)
     {
       // Print out the measurement:
-      Serial.print("temperature: ");
-      Serial.print(T,2);
-      Serial.println(" deg C, ");
+      Serial.print(", tempTwo: ");
+      Serial.print(T,2);//Celsius degrees
 //      Serial.print((9.0/5.0)*T+32.0,2);
 //      Serial.println(" deg F");
-      
+
       // Start a pressure measurement:
       // The parameter is the oversampling setting, from 0 to 3 (highest res, longest wait).
       // If request is successful, the number of ms to wait is returned.
@@ -158,9 +193,8 @@ void loop()
         if (status != 0)
         {
           // Print out the measurement:
-          Serial.print("absolute pressure: ");
-          Serial.print(P,2);
-          Serial.println(" mb, ");
+          Serial.print(", pressureAbs: ");
+          Serial.print(P,2); // mb
 //          Serial.print(P*0.0295333727,2);
 //          Serial.println(" inHg");
 
@@ -171,9 +205,8 @@ void loop()
           // Result: p0 = sea-level compensated pressure in mb
 
           p0 = pressure.sealevel(P,ALTITUDE); // we're at 1655 meters (Boulder, CO)
-          Serial.print("relative (sea-level) pressure: ");
+          Serial.print(", pressureRel: ");
           Serial.print(p0,2);
-          Serial.println(" mb, ");
 //          Serial.print(p0*0.0295333727,2);
 //          Serial.println(" inHg");
 
@@ -183,19 +216,18 @@ void loop()
           // Result: a = altitude in m.
 
           a = pressure.altitude(P,p0);
-          Serial.print("computed altitude: ");
-          Serial.print(a,0);
-          Serial.println(" meters, ");
+          Serial.print(", altComp: ");
+          Serial.print(a,0); //computed altitude in meters
 //          Serial.print(a*3.28084,0);
 //          Serial.println(" feet");
         }
-        else Serial.println("error retrieving pressure measurement\n");
+        else Serial.println(", status: \"error retrieving pressure measurement\"");
       }
-      else Serial.println("error starting pressure measurement\n");
+      else Serial.println(", status: \"error starting pressure measurement\"");
     }
-    else Serial.println("error retrieving temperature measurement\n");
+    else Serial.println(", status: \"error retrieving temperature measurement\"");
   }
-  else Serial.println("error starting temperature measurement\n");
-
+  else Serial.println(", status: \"error starting temperature measurement\"");
+  Serial.println("}");
   delay(5000);  // Pause for 5 seconds.
 }
