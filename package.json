@@ -1,0 +1,25 @@
+{
+  "name": "arduino-home-weather-station",
+  "version": "1.0.0",
+  "description": "Node JS backend for sharing the weather station information in a number of ways",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NerveClasp/arduino-home-weather-station.git"
+  },
+  "keywords": [
+    "IoT",
+    "smarthome",
+    "homeautomation",
+    "weather"
+  ],
+  "author": "Roman Gorokhov, Kyiv (Ukraine)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NerveClasp/arduino-home-weather-station/issues"
+  },
+  "homepage": "https://github.com/NerveClasp/arduino-home-weather-station#readme"
+}
