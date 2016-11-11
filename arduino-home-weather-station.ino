@@ -231,6 +231,7 @@ void loop()
   else json+=", \"status\": \"error starting temperature measurement\"";
   json+="}";
   Serial.println(json);
-  delay(5000);  // Pause for 5 seconds.
+  delay(120000);  // Pause for 2 minutes.
+//  delay(1000);
 }
 
