@@ -16,6 +16,10 @@ serialport.on('open', function(){
     if (data.length > 140) {
       writeJsonFile(data);
       terminalOutput(data);
+    }else if(data.length == 0){
+      console.log("No data");
+    }else{
+      console.log(data);
     }
     // console.log(data);
   });
@@ -25,18 +29,18 @@ function writeJsonFile(string){
   let filename = './data/'+moment().format("DD_MM_YYYY")+'.json';
   fs.access(filename, fs.F_OK, function(err) {
     if (!err) {
-      fs.appendFile(filename, moment().format('"HH.mm":')+string+",", function (err){
+      fs.appendFile(filename, moment().format('"HH:mm":')+string+",", function (err){
         if (err) {
           console.log(err);
         }
       }); //fs appendFile
     } else { //if no file was found
-      fs.writeFile(filename, '"data":{['+moment().format('"HH.mm":')+string+",", function(err){
+      fs.writeFile(filename, '"data":{['+moment().format('"HH:mm":')+string+",", function(err){
         if (err) {
           console.log(err);
         }
       });//writeFile
-      fs.appendFile(name, '"99.99":{"status": "end of the day"}]};', function(err){
+      fs.appendFile(name, '"99:99":{"status": "end of the day"}]};', function(err){
         if (err) {
           console.log(err);
         }else{
@@ -61,7 +65,7 @@ function terminalOutput(string) {
   };
   //Boolean(data.rainD)
   console.log("|==================\t***\t==================|");
-  console.log("| Outdoors t.:\t"+data.tempOne+" C \t | Indoors t.: \t"+data.tempTwo+" C\t  |");
+  console.log("| Outdoors t.:\t"+data.tempTwo+" C\t | Indoors t.: \t"+data.tempOne+" C\t  |");
   console.log("| Pressure: \t"+data.pressureRel+"\t | Humidity: \t"+data.humidity+"% \t  |");
   console.log("| Altitude: \t"+data.altComp+" m.\t | Raining: \t"+rain(data.rainD, data.rainA)+"\t  |" );
   console.log("|=="+moment().format("= DD.MM.YYYY ===\t***\t==== HH:mm:ss =")+"===|");
