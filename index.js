@@ -1,10 +1,24 @@
-const port = {name: "/dev/ttyACM0", rate: 9600};
+
 const SerialPort = require("serialport");
 const jsonfile = require('jsonfile');
 const moment = require('moment');
 const fs = require('fs');
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+const twitter = require('twitter');
 
+const config = require('./config.json');
+const twiConf = require('./twitter.json');
+console.log(config.rate);
+const port = {name: config.usbPort, rate: config.rate};
 let name = "./data/delete_me_im_lazy.json";//hardcoded for testing purposes, leave empty otherwise
+
+var url = 'mongodb://localhost:27017/weather';
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected correctly to server.");
+  db.close();
+});
 
 var serialport = new SerialPort(port.name, {
   baudRate: port.rate,
@@ -64,10 +78,24 @@ function terminalOutput(string) {
     }
   };
   //Boolean(data.rainD)
+  //rain(data.rainD, data.rainA)
+  //data.tempTwo
   console.log("|==================\t***\t==================|");
-  console.log("| Outdoors t.:\t"+data.tempTwo+" C\t | Indoors t.: \t"+data.tempOne+" C\t  |");
+  console.log("| Outdoors t.:\t"+-4+" C\t | Indoors t.: \t"+data.tempOne+" C\t  |");
   console.log("| Pressure: \t"+data.pressureRel+"\t | Humidity: \t"+data.humidity+"% \t  |");
-  console.log("| Altitude: \t"+data.altComp+" m.\t | Raining: \t"+rain(data.rainD, data.rainA)+"\t  |" );
+  console.log("| Altitude: \t"+data.altComp+" m.\t | Snowing: \t"+"hard!"+"\t  |" );
   console.log("|=="+moment().format("= DD.MM.YYYY ===\t***\t==== HH:mm:ss =")+"===|");
   console.log("|__________________\t___\t__________________|");
 }
+
+// var client = new twitter({
+//   consumer_key: process.env.TWITTER_CONSUMER_KEY,
+//   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+//   access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+//   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+// });
+// client.get('favorites/list', function(error, tweets, response) {
+//   if(error) throw error;
+//   console.log(tweets);  // The favorites.
+//   console.log(response);  // Raw response object.
+// });

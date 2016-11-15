@@ -25,6 +25,8 @@
   "dependencies": {
     "jsonfile": "^2.4.0",
     "moment": "^2.16.0",
-    "serialport": "^4.0.5"
+    "mongodb": "^2.2.11",
+    "serialport": "^4.0.5",
+    "twitter": "^1.4.0"
   }
 }

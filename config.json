@@ -1,0 +1,6 @@
+{
+  "usbPort": "/dev/ttyACM0",
+  "rate" : 9600,
+  "port": 8080,
+  "dbPath" : "mongodb://localhost:27017/weather"
+}
