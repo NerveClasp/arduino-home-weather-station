@@ -1,0 +1,19 @@
+<link rel="import" href="bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="bw-login.html">
+<link rel="import" href="bower_components/material-progress/material-progress.html">
+<dom-module id="bw-app">
+  <template>
+    <firebase-app auth-domain="bilohirya-weather.firebaseapp.com"
+      database-url="bilohirya-weather.firebaseio.com/"
+      api-key="AIzaSyCygZwnBuMvml0uAhUXggRszsE7sTfm8SQ">
+    </firebase-app>
+    <bw-login></bw-login>
+
+  </template>
+  <script>
+    Polymer({
+      is: "bw-app"
+
+    });
+  </script>
+</dom-module>

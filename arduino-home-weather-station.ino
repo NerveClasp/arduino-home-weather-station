@@ -59,12 +59,12 @@ V10 Mike Grusin, SparkFun Electronics 10/24/2013
 V1.1.2 Updates for Arduino 1.6.4 5/2015
 */
 
-#include "DHT.h"
+//#include "DHT.h"
 
-#define DHTPIN 2     // what pin we're connected to
+//#define DHTPIN 2     // what pin we're connected to
 
 // Uncomment whatever type you're using!
-#define DHTTYPE DHT11   // DHT 11
+//#define DHTTYPE DHT11   // DHT 11
 // #define DHTTYPE DHT22   // DHT 22  (AM2302)
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
@@ -73,7 +73,7 @@ V1.1.2 Updates for Arduino 1.6.4 5/2015
 // Connect pin 4 (on the right) of the sensor to GROUND
 // Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
 
-DHT dht(DHTPIN, DHTTYPE);
+//DHT dht(DHTPIN, DHTTYPE);
 
 // Your sketch must #include this library, and the Wire library.
 // (Wire is a standard library included with Arduino.):
@@ -104,7 +104,7 @@ void setup()
     json+="{\"status\": \"BMP180 init fail\"}";
     while(1); // Pause forever.
   }
-  dht.begin();
+//  dht.begin();
 }
 
 void loop()
@@ -122,18 +122,18 @@ void loop()
 
 // Reading temperature or humidity takes about 250 milliseconds!
 // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-  float h = dht.readHumidity();
-  float t = dht.readTemperature();
+//  float h = dht.readHumidity();
+//  float t = dht.readTemperature();
 
   // check if returns are valid, if they are NaN (not a number) then something went wrong!
-  if (isnan(t) || isnan(h)) {
-    json+=", \"status\": \"malfunction\"";
-  } else {
-    json+=", \"status\": \"working\", \"humidity\": ";
-    json+=h;
-    json+=", \"tempOne\": ";
-    json+=t;
-  }
+//  if (isnan(t) || isnan(h)) {
+    json+=", \"status\": \"malfunction\", \"humidity\": 0, \"tempOne\": 0";
+//  } else {
+//    json+=", \"status\": \"working\", \"humidity\": ";
+//    json+=h;
+//    json+=", \"tempOne\": ";
+//    json+=t;
+//  }
   // Loop here getting pressure readings every 10 seconds.
 
   // If you want sea-level-compensated pressure, as used in weather reports,

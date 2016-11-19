@@ -1,0 +1,30 @@
+{
+  "name": "arduino-home-weather-station",
+  "description": "Node JS backend for sharing the weather station information in a number of ways",
+  "main": "index.js",
+  "authors": [
+    "Roman Gorokhov",
+    "Kyiv (Ukraine)"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "IoT",
+    "smarthome",
+    "homeautomation",
+    "weather"
+  ],
+  "homepage": "https://github.com/NerveClasp/arduino-home-weather-station",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.7.0",
+    "polymerfire": "firebase/polymerfire#^0.10.3",
+    "paper-button": "PolymerElements/paper-button#^1.0.14"
+  }
+}

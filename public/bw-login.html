@@ -1,0 +1,37 @@
+<link rel="import" href="bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<dom-module id="bw-login">
+  <template>
+    <firebase-auth id="auth" user="{{user}}" status-known={{statusKnown}} provider="google" on-error="handleError">
+    </firebase-auth>
+    <template is="dom-if" if="[[user]]">
+      <h1>Hey there, [[user.displayName]]!</h1>
+      <h2>Welcome to Bilohirya Weather :)</h2>
+    </template>
+    <paper-button raised on-tap="login" hidden$="[[user]]">Sign In</paper-button>
+    <paper-button raised on-tap="logout" hidden$="[[!user]]">Sign Out</paper-button>
+  </template>
+  <script>
+    Polymer({
+      is: "bw-login",
+      properties: {
+        user: {
+          type: Object
+        },
+        statusKnown: {
+          type: Object
+        }
+      },
+      login: function() {
+        return this.$.auth.signInWithPopup();
+      },
+      logout:function() {
+        return this.$.auth.signOut();
+      }
+
+    });
+    this.document.querySelector('ninja-min-countdown').addEventListener('finished', function(e) {
+        alert('Done!');
+    });
+  </script>
+</dom-module>
